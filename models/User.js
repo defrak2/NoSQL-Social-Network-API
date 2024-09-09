@@ -1,29 +1,45 @@
 const { Schema, model } = require('mongoose');
-const friendSchema = require('./Friend');
-const thoughtSchema = require('./Thought')
+const Thought = require('./Thought'); 
+const Friend = require('./Friend'); 
 
-const userSchema = new Schema (
-{
-
-  friends: [friendSchema],
-  thoughts: [thoughtSchema],  
-  _id: {
-
+const userSchema = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [/.+@.+\..+/, 'Please enter a valid email address'],
+    },
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Thought',
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Friend',
+      },
+    ],
+    friendCount: {
+      type: Number,
+      default: 0,
+    },
   },
-  username: {
-
-  },
-  email: {
-
+  {
+    toJSON: {
+      getters: true,
+    },
   }
-},
-{
-  toJSON: {
-    getters: true,
-  },
-}
 );
 
-const User = model('user', userSchema)
+const User = model('User', userSchema);
 
 module.exports = User;
