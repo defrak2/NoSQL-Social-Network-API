@@ -8,11 +8,11 @@ const {
   deleteThought,
 } = require('../../controllers/thoughtController.js');
 
-router.route('/').get(getThoughts).post(createThought);
+router.route('/').get(getThoughts).get(getSingleThought).post(createThought);
 
 router
 .route('/:thoughtId')
-.get(getSingleThought)
+
 .put(updateThought)
 .delete(deleteThought);
 

@@ -13,7 +13,7 @@ module.exports = {
 
   async getSingleThought(req, res) {
     try {
-      const course = await Course.findOne({ _id: req.params.courseId })
+      const thoughts = await Thought.findOne({ _id: req.params.thoughtId })
       .populate('users');
 
       if (!thought) {
@@ -27,9 +27,19 @@ module.exports = {
   },
 
   async createThought(req, res) {
+
     try {
-      const course = await Course.create(req.body);
-      res.json(course);
+      const thought = await Thought.create(req.body);
+
+      const user = await User.findById(req.body.userId); 
+      if (user) {
+        user.thoughts.push(thought._id);
+        await user.save();
+      } else {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.status(201).json(thought);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -40,12 +50,12 @@ module.exports = {
     try {
       const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
 
-      if (!course) {
+      if (!thought) {
         res.status(404).json({ message: 'No course with that ID' });
 
       }
 
-      await Student.deleteMany({ _id: { $in: thought.users } });
+      await User.deleteMany({ _id: { $in: thought.users } });
       res.json({ message: 'Thought and users deleted' });
     } catch (err) {
       res.status(500).json(err);

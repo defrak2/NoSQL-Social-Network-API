@@ -65,13 +65,13 @@ module.exports = {
     }
   },
 
-  async addThought(req, res) {
+  async addFriend(req, res) {
     try {
       const user = await User.findById(req.params.userId);
       if (!user) {
         return res.status(404).json({ message: 'No user found with that ID' });
       }
-      user.thoughts.push(req.body.thoughtId); 
+      user.friends.push(req.body.friendId); 
       await user.save();
       res.json(user);
     } catch (err) {
@@ -79,13 +79,13 @@ module.exports = {
     }
   },
 
-  async removeThought(req, res) {
+  async removeFriend(req, res) {
     try {
       const user = await User.findById(req.params.userId);
       if (!user) {
         return res.status(404).json({ message: 'No user found with that ID' });
       }
-      user.thoughts.pull(req.params.thoughtId); 
+      user.friends.pull(req.params.friendId); 
       await user.save();
       res.json(user);
     } catch (err) {
