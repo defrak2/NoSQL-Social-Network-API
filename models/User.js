@@ -1,6 +1,5 @@
-const { Schema, model } = require('mongoose');
-const Thought = require('./Thought'); 
-const Friend = require('./Friend'); 
+const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
 
 const userSchema = new Schema(
   {
