@@ -49,12 +49,17 @@ module.exports = {
 
   async deleteUser(req, res) {
     try {
-      const user = await User.findByIdAndDelete(req.params.userId);
+      const user = await User.findById(req.params.userId);
       if (!user) {
         return res.status(404).json({ message: 'No user found with that ID' });
       }
-     
-      res.json({ message: 'User deleted' });
+
+      await Thought.deleteMany({ _id: { $in: user.thoughts } });
+  
+
+      await User.findByIdAndDelete(req.params.userId);
+  
+      res.json({ message: 'User and associated thoughts deleted' });
     } catch (err) {
       res.status(500).json(err);
     }
